@@ -1,50 +1,57 @@
-// Jenkinsfile
-// Jenkins Pipeline to automate Selenium test execution for Student Feedback Form
-
 pipeline {
-
     agent any
 
     stages {
-
         stage('Checkout') {
             steps {
-                echo 'Step 1: Checking out project files...'
-                // If using GitHub, uncomment and update:
-                // git branch: 'main', url: 'https://github.com/your-username/student-feedback-form.git'
+                echo '========================================='
+                echo 'Step 1: Checking out project files'
+                echo '========================================='
                 echo 'Project files loaded successfully.'
             }
         }
 
         stage('Install Dependencies') {
             steps {
-                echo 'Step 2: Installing Python dependencies...'
+                echo '========================================='
+                echo 'Step 2: Installing Python and Selenium dependencies'
+                echo '========================================='
+                bat 'pip install --upgrade pip'
                 bat 'pip install selenium'
-                // Use 'sh' instead of 'bat' if running on Linux/Mac Jenkins
+                bat 'pip install webdriver-manager'
             }
         }
 
         stage('Run Selenium Tests') {
             steps {
-                echo 'Step 3: Running Selenium test cases...'
-                bat 'python test_feedback_form.py'
-                // Use 'sh' instead of 'bat' if running on Linux/Mac Jenkins
+                echo '========================================='
+                echo 'Step 3: Running Selenium test cases'
+                echo '========================================='
+                bat 'python -m unittest test_feedback_form.py -v'
             }
         }
 
         stage('Results') {
             steps {
-                echo 'Step 4: All test cases completed.'
+                echo '========================================='
+                echo 'Step 4: Test execution completed'
+                echo '========================================='
+                echo 'All tests finished successfully!'
             }
         }
     }
 
     post {
+        always {
+            echo '========================================='
+            echo 'Pipeline Execution Completed'
+            echo '========================================='
+        }
         success {
-            echo 'BUILD SUCCESSFUL: All Selenium test cases passed!'
+            echo '✅ BUILD SUCCESSFUL: All Selenium test cases PASSED!'
         }
         failure {
-            echo 'BUILD FAILED: One or more test cases failed. Please check the logs.'
+            echo '❌ BUILD FAILED: Check logs above'
         }
     }
 }
